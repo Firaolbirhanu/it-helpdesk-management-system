@@ -1,0 +1,18 @@
+# Python virtual environments
+backend/venv/
+.venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Environment files
+backend/.env
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# TypeScript build info
+*.tsbuildinfo
