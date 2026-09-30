@@ -592,6 +592,23 @@ export type UserRole =
   | "Technician"
   | "Administrator";
 
+export function normalizeUserRole(value: unknown): UserRole | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  switch (value.toLowerCase()) {
+    case "employee":
+      return "Employee";
+    case "technician":
+      return "Technician";
+    case "administrator":
+      return "Administrator";
+    default:
+      return null;
+  }
+}
+
 export interface CurrentUser {
   id: number;
   role: UserRole;
@@ -635,10 +652,15 @@ export function getCurrentUserFromToken(): CurrentUser | null {
     const payload = JSON.parse(
       atob(token.split(".")[1])
     );
+    const role = normalizeUserRole(payload.role);
+
+    if (!payload.sub || !role) {
+      return null;
+    }
 
     return {
       id: Number(payload.sub),
-      role: payload.role as UserRole,
+      role,
     };
   } catch {
     return null;

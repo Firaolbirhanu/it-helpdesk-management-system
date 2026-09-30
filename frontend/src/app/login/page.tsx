@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Headphones,
   Lock,
@@ -15,6 +16,7 @@ import {
 import { login } from "@/lib/api";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -35,8 +37,8 @@ export default function LoginPage() {
       // Store JWT temporarily.
       localStorage.setItem("access_token", data.access_token);
 
-      // Go to dashboard.
-      window.location.href = "/dashboard";
+      // Let the home route choose the dashboard for this role.
+      router.replace("/");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

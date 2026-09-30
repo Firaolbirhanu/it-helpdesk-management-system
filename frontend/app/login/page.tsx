@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Headphones,
   Lock,
@@ -15,6 +16,7 @@ import {
 import { login } from "@/lib/api";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +37,7 @@ export default function LoginPage() {
     try {
       const data = await login(email.trim(), password);
       localStorage.setItem("access_token", data.access_token);
-      window.location.href = "/dashboard";
+      router.replace("/");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

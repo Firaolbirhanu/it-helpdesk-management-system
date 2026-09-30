@@ -1,4 +1,4 @@
-import { CurrentUser, UserRole } from "./api";
+import { CurrentUser, normalizeUserRole } from "./api";
 
 function decodeJwtPayload(token: string) {
   const payloadPart = token.split(".")[1];
@@ -31,7 +31,7 @@ export function getCurrentUser(): CurrentUser | null {
   try {
     const payload = decodeJwtPayload(token);
 
-    const role = payload.role as UserRole;
+    const role = normalizeUserRole(payload.role);
 
     if (
       !payload.sub ||
