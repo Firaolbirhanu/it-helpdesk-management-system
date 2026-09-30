@@ -54,7 +54,7 @@ def register(
             detail="Department not found",
         )
 
-    employee_role = db.query(Role).filter(Role.name == "Employee").first()
+    employee_role = db.query(Role).filter(Role.name == "employee").first()
     if employee_role is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
