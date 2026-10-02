@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import AppShell from "@/components/layout/AppShell";
 import {
   assignTicket,
   getAllAdminTickets,
@@ -170,7 +171,7 @@ function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
@@ -381,7 +382,9 @@ function AdminDashboard() {
 export default function AdminPage() {
   return (
     <ProtectedRoute allowedRoles={["Administrator"]}>
-      <AdminDashboard />
+      <AppShell>
+        <AdminDashboard />
+      </AppShell>
     </ProtectedRoute>
   );
 }

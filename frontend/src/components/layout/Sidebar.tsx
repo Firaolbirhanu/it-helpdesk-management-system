@@ -95,6 +95,7 @@ export default function Sidebar() {
   }
 
   return (
+    <>
     <aside className="hidden w-64 shrink-0 border-r border-gray-200 bg-white lg:flex lg:flex-col">
 
       {/* Logo */}
@@ -187,5 +188,51 @@ export default function Sidebar() {
         </button>
       </div>
     </aside>
+
+    <nav
+      aria-label="Primary navigation"
+      className="flex gap-1 overflow-x-auto border-b border-gray-200 bg-white p-2 lg:hidden"
+    >
+      {navigation.map((item) => {
+        const Icon = item.icon;
+        const active =
+          pathname === item.href ||
+          pathname.startsWith(`${item.href}/`);
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium",
+              active
+                ? "bg-blue-50 text-blue-700"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            )}
+          >
+            <Icon size={17} />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
+
+      <Link
+        href="/settings"
+        className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+      >
+        <Settings size={17} />
+        <span>Settings</span>
+      </Link>
+
+      <button
+        onClick={logout}
+        className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600"
+      >
+        <LogOut size={17} />
+        <span>Logout</span>
+      </button>
+    </nav>
+    </>
   );
 }
