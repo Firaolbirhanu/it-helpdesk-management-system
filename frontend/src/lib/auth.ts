@@ -30,7 +30,6 @@ export function getCurrentUser(): CurrentUser | null {
 
   try {
     const payload = decodeJwtPayload(token);
-
     const role = normalizeUserRole(payload.role);
 
     if (
@@ -38,7 +37,6 @@ export function getCurrentUser(): CurrentUser | null {
       !role ||
       (typeof payload.exp === "number" && payload.exp <= Date.now() / 1000)
     ) {
-      localStorage.removeItem("access_token");
       return null;
     }
 
@@ -57,6 +55,7 @@ export function logout() {
   }
 
   localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
   window.location.href = "/login";
 }
 

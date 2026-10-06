@@ -37,6 +37,7 @@ export default function LoginPage() {
     try {
       const data = await login(email.trim(), password);
       localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
       router.replace("/");
     } catch (error) {
       if (error instanceof Error) {

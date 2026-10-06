@@ -3,13 +3,70 @@ const API_BASE_URL =
 
 const API_URL = API_BASE_URL;
 
+let refreshRequest: Promise<string | null> | null = null;
+
+export function refreshAccessToken(): Promise<string | null> {
+  if (typeof window === "undefined") {
+    return Promise.resolve(null);
+  }
+
+  if (refreshRequest) {
+    return refreshRequest;
+  }
+
+  const refreshToken = localStorage.getItem("refresh_token");
+
+  if (!refreshToken) {
+    localStorage.removeItem("access_token");
+    return Promise.resolve(null);
+  }
+
+  refreshRequest = (async () => {
+    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        return null;
+      }
+
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.detail || "Failed to refresh your session.");
+    }
+
+    const tokens: LoginResponse = await response.json();
+
+    if (!tokens.access_token || !tokens.refresh_token) {
+      throw new Error("The session refresh response was invalid.");
+    }
+
+    localStorage.setItem("access_token", tokens.access_token);
+    localStorage.setItem("refresh_token", tokens.refresh_token);
+
+    return tokens.access_token;
+  })().finally(() => {
+    refreshRequest = null;
+  });
+
+  return refreshRequest;
+}
+
 // ============================================================
 // AUTH TYPES
 // ============================================================
 
 export interface LoginResponse {
   access_token: string;
+  refresh_token: string;
   token_type: string;
+  expires_in: number;
 }
 
 export interface RegisterData {
@@ -866,12 +923,27 @@ export async function getAllUsers(): Promise<AdminUser[]> {
     },
   });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+  let authorizedResponse = response;
+
+  if (response.status === 401) {
+    const refreshedToken = await refreshAccessToken();
+
+    if (refreshedToken) {
+      authorizedResponse = await fetch(`${API_BASE_URL}/api/users/admin/all`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${refreshedToken}`,
+        },
+      });
+    }
+  }
+
+  if (!authorizedResponse.ok) {
+    const errorData = await authorizedResponse.json().catch(() => null);
     throw new Error(errorData?.detail || "Failed to fetch users.");
   }
 
-  return response.json();
+  return authorizedResponse.json();
 }
 
 export function activateUser(userId: number): Promise<AdminUser> {
