@@ -153,7 +153,7 @@ def serialize_user(user: User) -> dict:
 @router.post("/admin/technicians", status_code=status.HTTP_201_CREATED)
 def create_technician(
     technician_data: TechnicianCreate,
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     if db.query(User).filter(User.email == technician_data.email).first():
@@ -218,7 +218,7 @@ def create_technician(
 
 @router.get("/admin/all")
 def get_all_users(
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     try:
@@ -287,7 +287,7 @@ def set_user_active_state(
 @router.patch("/admin/{user_id}/deactivate")
 def deactivate_user(
     user_id: int,
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     return set_user_active_state(user_id, False, current_user, db)
@@ -296,7 +296,7 @@ def deactivate_user(
 @router.patch("/admin/{user_id}/activate")
 def activate_user(
     user_id: int,
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     return set_user_active_state(user_id, True, current_user, db)
