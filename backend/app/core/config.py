@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     JWT_ALGORITHM: str = "HS256"
-    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000,https://it-helpdesk-management-system.vercel.app"
+    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000,https://it-helpdesk-management-system-das70zyla.vercel.app"
 
     @field_validator("SECRET_KEY")
     @classmethod
