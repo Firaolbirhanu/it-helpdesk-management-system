@@ -33,7 +33,7 @@ def assign_ticket(
     ticket_id: int,
     assignment_data: TicketAssignmentCreate,
     current_user: User = Depends(
-        require_role("Administrator")
+        require_role("admin")
     ),
     db: Session = Depends(get_db),
 ):

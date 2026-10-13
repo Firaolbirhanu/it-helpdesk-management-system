@@ -35,7 +35,7 @@ def serialize_audit_log(audit_log: AuditLog) -> dict:
 
 @router.get("")
 def get_audit_logs(
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     audit_logs = (
@@ -51,7 +51,7 @@ def get_audit_logs(
 @router.get("/tickets/{ticket_id}")
 def get_ticket_audit_logs(
     ticket_id: int,
-    current_user: User = Depends(require_role("Administrator")),
+    current_user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     audit_logs = (

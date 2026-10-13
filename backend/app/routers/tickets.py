@@ -155,7 +155,7 @@ def get_my_tickets(
 )
 def get_all_tickets(
     current_user: User = Depends(
-        require_role("Administrator")
+        require_role("admin")
     ),
     db: Session = Depends(get_db),
 ):
@@ -177,7 +177,7 @@ def get_all_tickets(
 )
 def get_all_technicians(
     current_user: User = Depends(
-        require_role("Administrator")
+        require_role("admin")
     ),
     db: Session = Depends(get_db),
 ):
