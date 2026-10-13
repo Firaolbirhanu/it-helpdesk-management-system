@@ -649,22 +649,21 @@ export type UserRole =
   | "Technician"
   | "Administrator";
 
-export function normalizeUserRole(value: unknown): UserRole | null {
-  if (typeof value !== "string") {
-    return null;
+export function normalizeUserRole(role: unknown) {
+  if (typeof role !== "string") return null;
+
+  const normalized = role.trim().toLowerCase();
+
+  if (normalized === "employee") return "Employee";
+  if (normalized === "technician") return "Technician";
+
+  if (normalized === "admin" || normalized === "administrator") {
+    return "Administrator";
   }
 
-  switch (value.toLowerCase()) {
-    case "employee":
-      return "Employee";
-    case "technician":
-      return "Technician";
-    case "administrator":
-      return "Administrator";
-    default:
-      return null;
-  }
+  return null;
 }
+
 
 export interface CurrentUser {
   id: number;
